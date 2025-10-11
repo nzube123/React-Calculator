@@ -13,6 +13,10 @@
   }
 }
 
+::selection {
+  background-color: rgb(49, 23, 23);
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -28,11 +32,26 @@
   color: #61dafb;
 }
 
+#textinput {
+  width: 80%;
+  padding: 15px;
+  border-radius: 20px;
+  margin: 20px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+input {
+  width: 60%;
+  padding: 10px;
+  border-radius: 20px;
+  margin: 200px 20px 0px 0xp;
 }
