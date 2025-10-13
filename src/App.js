@@ -1,10 +1,10 @@
 // import logo from './logo.svg';
 import './App.css';
-import TodoList from './todo2';
+import Calculator from './calculator';
 function App() {
   return (
     <>
-      <TodoList />
+      <Calculator />
     </>
   )
 }
