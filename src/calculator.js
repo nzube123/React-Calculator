@@ -1,28 +1,38 @@
 import { useState } from "react";
 import './calc.css'
+import { Lexer } from "./lexer";
 
-function Inputarea({ name, value }) {
-    return <div className={name}>{value}</div>
+function Inputarea({ name, value, onChangeValue }) {
+    return <div className={name} onChange={onChangeValue}>{value}</div>
 }
 function OutputArea({name, value}) {
     return <div className={name}>{value}</div>
 }
 
-function Button({ NameClass, Bvalue, onButtonClick }) {
+function Button({ NameClass, Bvalue, onButtonClick}) {
     return <button className={NameClass} onClick={onButtonClick}>{Bvalue}</button>
 }
 
 
 
 function Calculator() {
+    const [TokenUsed, setTokenUsed] = useState([])
     const [CurrentValue, setCurrentValue] = useState('');
     const [evalAnswer, setevalAnswer ] = useState(0)
+
+    function handleTokenUsed() {
+        let current = 0
+        
+        while (current < CurrentValue.length) {
+            alert("hi")
+        }
+    }
 
     function handleClick(val) {
         setCurrentValue((prevNumber) => [...prevNumber, val]);
     }
 
-    var x = 78 + 87;
+    // var x = 78 + 87;
 
     // function  evaluation
     function evaluation() {
@@ -33,7 +43,7 @@ function Calculator() {
         <>
             <center>
                 <section>
-                    <Inputarea name={"inputarea"} value={CurrentValue} />
+                    <Inputarea name={"inputarea"} value={CurrentValue} onChangeValue={handleTokenUsed} />
                     <OutputArea name={"inputarea output"} value={evalAnswer} />
                     <div className="ButtonDiv">                        
 
@@ -65,6 +75,12 @@ function Calculator() {
         </>
     )
 }
+
+
+
+
+// lexer function
+
 
 
 export default Calculator;
