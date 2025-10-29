@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import './calc.css'
 
 function Inputarea({ name, value, onChangeValue }) {
@@ -8,84 +8,128 @@ function OutputArea({ name, value }) {
     return <div className={name}>{value}</div>
 }
 
-function Button({ NameClass, Bvalue, onButtonClick }) {
-    return <button className={NameClass} onClick={onButtonClick}>{Bvalue}</button>
+function Button(props) {
+    return <button className={"Button"} {...props}>{props.value}</button>
 }
 
-
-
+// Maintain an array of sth like [10, +, 21, -, 5]
+// Evaluate function just goes right to left and computes
+const OPERATORS = ["+", "-", "/", "*"];
 function Calculator() {
-    // const [numbre, setNumber] = useState();
-    const [CurrentValue, setCurrentValue] = useState('');
-    const [Output, setOutput] = useState(0)
-    const [NumberOne, setNumberOne] = useState(0);
-    const [Operator, setOperator] = useState('');
-    const [NumberTwo, setNumberTwo] = useState(0);
-    const prevValue = useRef(0);
+    const [output, setOutput] = useState(0)
+    const [tokens, setTokens] = useState([])
+    let currentValue = tokens.join(' ');
 
-    useEffect(() => {
-      prevValue.current = CurrentValue;
-      if(/\d/.test(CurrentValue)) {
-        setOutput(prevValue.current);
-        console.log(Output[5]);
-        
-      }
-        if (/[+\-*/]/.test(CurrentValue)) {
-              console.log(prevValue.current);  
-              setOutput(prevValue.current);
-              console.log(Output);
+
+    // function to tun when = to sign is clicked
+    function evaluation() {
+        // Maintain a value outside loop called currentTotal defaulted to 0
+        let currentTotal = 0;
+        // Maintain a value called currentOperator defaulted to +
+        let currentOperator = '+';
+
+        // For each token, if number, do currTotal = currTotal {currOperator} currToken
+        tokens.forEach(token => {
+            if (typeof token == 'number') {
+                switch (currentOperator) {
+                    case '+':
+                        currentTotal += token;
+                        break;
+                    case '-':
+                        currentTotal -= token;
+                        break;
+                    case '*':
+                        currentTotal *= token;
+                        break;
+                    case '/':
+                        currentTotal /= token;
+                        break;
+
+                    default:
+                        currentTotal = token;
+                        break;
+                }
+            } else if (OPERATORS.includes(token)) {
+                currentOperator = token;
+            }
+            setOutput(currentTotal);
+
+        });
     }
-    
-}, [CurrentValue])
-    
 
+
+// function to run when a button aside the "=" button is clicked
     function handleClick(val) {
-        setCurrentValue((prevNumber) => [...prevNumber, val]);
+        // Check if it is an operator
+        const isOperator = OPERATORS.includes(val);
+        if (isOperator) {
+            setTokens((prevValue) => [...prevValue, val]);
+            alert("Operator clicked");
+
+        }
+        // If it is not an operator and t is not a number typeof val != number, return
+        if (!isOperator && typeof (val) !== 'number') {
+            alert("The value is invalid");
+            return;
+        }
+        // Since it is a number, check if the last item in the tokens array is a number
+        if (typeof (val) == 'number') {
+            alert("Number clicked");
+            setTokens((prevValue) => [...prevValue, val]);
+
+            // If the last item in the token array is a number, update it to parseInt(`${lastItem}${currNumber}`)
+            const lastitem = tokens[tokens.length - 1];
+            if (typeof lastitem == 'number') {
+                let newNumber = parseInt(`${lastitem}${val}`)
+                let newToken = tokens.slice(0, tokens.length - 1)
+                newToken.push(newNumber);
+                setTokens(newToken);
+            }
+
+        }
+
     }
 
-    // var x = 78 + 87;
+
     return (
-        <>
-            <center>
-                <section>
-                    <Inputarea name={"inputarea"} value={CurrentValue} />
-                    <OutputArea name={"inputarea output"} value={Output} />
-                    <div className="ButtonDiv">
+        <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+            <section>
+                <Inputarea name={"inputarea"} value={currentValue} />
+                <OutputArea name={"inputarea output"} value={output} />
+                <div className="ButtonDiv">
 
-                        <Button NameClass={"Button"} Bvalue={7} onButtonClick={() => handleClick(7)} />
-                        <Button NameClass={"Button"} Bvalue={8} onButtonClick={() => handleClick(8)} />
-                        <Button NameClass={"Button"} Bvalue={9} onButtonClick={() => handleClick(9)} />
-                        <Button NameClass={"Button"} Bvalue={"/"} onButtonClick={() => handleClick("/")} />
-                        {/* <Button NameClass={"Button"} Bvalue={"pie"} onButtonClick={() => handleClick(22/7)} /> */}
+                    <Button value={7} onClick={() => handleClick(7)} />
+                    <Button value={8} onClick={() => handleClick(8)} />
+                    <Button value={9} onClick={() => handleClick(9)} />
+                    <Button value={"/"} onClick={() => handleClick("/")} />
+                    {/* <Button value={"pie"} onClick={() => handleClick(22/7)} /> */}
 
 
-                        <Button NameClass={"Button"} Bvalue={4} onButtonClick={() => handleClick(4)} />
-                        <Button NameClass={"Button"} Bvalue={5} onButtonClick={() => handleClick(5)} />
-                        <Button NameClass={"Button"} Bvalue={6} onButtonClick={() => handleClick(6)} />
-                        <Button NameClass={"Button"} Bvalue={"x"} onButtonClick={() => handleClick("*")} />
+                    <Button value={4} onClick={() => handleClick(4)} />
+                    <Button value={5} onClick={() => handleClick(5)} />
+                    <Button value={6} onClick={() => handleClick(6)} />
+                    <Button value={"x"} onClick={() => handleClick("*")} />
 
-                        <Button NameClass={"Button"} Bvalue={1} onButtonClick={() => handleClick(1)} />
-                        <Button NameClass={"Button"} Bvalue={2} onButtonClick={() => handleClick(2)} />
-                        <Button NameClass={"Button"} Bvalue={3} onButtonClick={() => handleClick(3)} />
-                        <Button NameClass={"Button"} Bvalue={"-"} onButtonClick={() => handleClick("-")} />
+                    <Button value={1} onClick={() => handleClick(1)} />
+                    <Button value={2} onClick={() => handleClick(2)} />
+                    <Button value={3} onClick={() => handleClick(3)} />
+                    <Button value={"-"} onClick={() => handleClick("-")} />
 
-                        <Button NameClass={"Button"} Bvalue={"="} onButtonClick={() => {}} />
-                        <Button NameClass={"Button"} Bvalue={0} onButtonClick={() => handleClick(0)} />
-                        <Button NameClass={"Button"} Bvalue={"+"} onButtonClick={() => handleClick("+")} />
-                        <Button NameClass={"Button"} Bvalue={"pie"} onButtonClick={() => handleClick(22 / 7)} />
-                    </div>
+                    <Button value={"="} onClick={() => evaluation()} />
+                    <Button value={0} onClick={() => handleClick(0)} />
+                    <Button value={"+"} onClick={() => handleClick("+")} />
+                    <Button value={"pie"} onClick={() => handleClick(22 / 7)} />
+                </div>
 
-                </section>
-            </center>
-        </>
+            </section>
+        </div>
     )
 }
-
-
-
-
-// lexer function
-
-
 
 export default Calculator;
