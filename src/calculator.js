@@ -64,8 +64,6 @@ function Calculator() {
         const isOperator = OPERATORS.includes(val);
         if (isOperator) {
             setTokens((prevValue) => [...prevValue, val]);
-            alert("Operator clicked");
-
         }
         // If it is not an operator and t is not a number typeof val != number, return
         if (!isOperator && typeof (val) !== 'number') {
@@ -74,7 +72,6 @@ function Calculator() {
         }
         // Since it is a number, check if the last item in the tokens array is a number
         if (typeof (val) == 'number') {
-            alert("Number clicked");
             setTokens((prevValue) => [...prevValue, val]);
 
             // If the last item in the token array is a number, update it to parseInt(`${lastItem}${currNumber}`)
